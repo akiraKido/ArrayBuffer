@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Xunit;
 using FluentAssertions;
 
@@ -162,7 +163,37 @@ namespace ArrayBufferNS.Tests
                 i.Should().Be(cnt);
                 cnt += 1;
             }
+        }
 
+        [Fact]
+        public void TestListAddRange()
+        {
+            var buffer = new ArrayBuffer<string>(3);
+            var list = new List<string>();
+
+            using (var span = new ArrayBuffer<string>.Span(buffer, 3) {"aaa", "bbb", "ccc"})
+            {
+                list.AddRange(span);
+            }
+            using (var span = new ArrayBuffer<string>.Span(buffer, 3) {"ddd", "eee", "fff"})
+            {
+                list.AddRange(span);
+            }
+            using (var span = new ArrayBuffer<string>.Span(buffer, 3) {"ggg", "hhh", "iii"})
+            {
+                list.AddRange(span);
+            }
+
+            buffer.Array.Count.Should().Be(3);
+            list[0].Should().Be("aaa");
+            list[1].Should().Be("bbb");
+            list[2].Should().Be("ccc");
+            list[3].Should().Be("ddd");
+            list[4].Should().Be("eee");
+            list[5].Should().Be("fff");
+            list[6].Should().Be("ggg");
+            list[7].Should().Be("hhh");
+            list[8].Should().Be("iii");
         }
     }
 }
