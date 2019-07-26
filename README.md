@@ -79,7 +79,7 @@ if(x)
 }
 else
 {
-    AddRange(new ArrayBuffer<string>.Span(buffer, 2)
+    AddRange(new ArrayBuffer<string>.Span(buffer, 3)
     {
       "fff",
       "ggg",
