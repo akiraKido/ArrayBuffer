@@ -195,5 +195,25 @@ namespace ArrayBufferNS.Tests
             list[7].Should().Be("hhh");
             list[8].Should().Be("iii");
         }
+
+        [Fact]
+        public void TestThatOnceReturnedCantUse()
+        {
+            var buffer = new ArrayBuffer<int>(10);
+
+            var span = buffer.Take(10);
+            for (int i = 0; i < span.Length; i++)
+            {
+                span[i] = 1;
+            }
+            span.Return();
+            
+            span.Returned.Should().Be(true);
+
+            span[0].Should().Be(0);
+
+            span[0] = 10;
+            span[0].Should().Be(0);
+        }
     }
 }

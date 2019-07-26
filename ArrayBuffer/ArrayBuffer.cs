@@ -16,6 +16,7 @@ namespace ArrayBufferNS
             private readonly ArrayBuffer<T> parent;
 
             private int last;
+            public bool Returned { get; private set; }
 
             public Span(ArrayBuffer<T> parent, int size)
             {
@@ -24,13 +25,19 @@ namespace ArrayBufferNS
                 
                 this.parent = parent;
                 last = 0;
+                Returned = false;
             }
 
             public T this[int i]
             {
-                get => parent.array[start + i];
+                get => Returned ? default : parent.array[start + i];
                 set
                 {
+                    if (Returned)
+                    {
+                        return;
+                    }
+                    
                     last = -1;
                     parent.array[start + i] = value;
                 }
@@ -49,6 +56,8 @@ namespace ArrayBufferNS
 
             public void Return()
             {
+                Returned = true;
+                
                 for (int i = start; i < start + Length; i++)
                 {
                     parent.array[i] = default;
@@ -75,9 +84,13 @@ namespace ArrayBufferNS
                     this.span = span;
                 }
 
-
                 public bool MoveNext()
                 {
+                    if (span.Returned)
+                    {
+                        return false;
+                    }
+                    
                     if (index + 1 >= span.Length)
                     {
                         return false;
