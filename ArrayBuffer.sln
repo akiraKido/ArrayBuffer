@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayBuffer", "ArrayBuffer\ArrayBuffer.csproj", "{1E8896FE-D743-4548-805B-FAFB27DFFBD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayBuffer.Tests", "ArrayBuffer.Tests\ArrayBuffer.Tests.csproj", "{58FE9089-A8C1-474A-8B18-FEEF2C18728F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryDictionary", "BinaryDictionary\BinaryDictionary\BinaryDictionary.csproj", "{D16278B8-6060-480C-AC0A-D14F66759F7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E8896FE-D743-4548-805B-FAFB27DFFBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E8896FE-D743-4548-805B-FAFB27DFFBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E8896FE-D743-4548-805B-FAFB27DFFBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E8896FE-D743-4548-805B-FAFB27DFFBD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58FE9089-A8C1-474A-8B18-FEEF2C18728F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58FE9089-A8C1-474A-8B18-FEEF2C18728F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58FE9089-A8C1-474A-8B18-FEEF2C18728F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58FE9089-A8C1-474A-8B18-FEEF2C18728F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
