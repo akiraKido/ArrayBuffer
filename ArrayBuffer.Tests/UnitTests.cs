@@ -125,5 +125,25 @@ namespace ArrayBufferNS.Tests
                 buffer.Array[i].Should().Be(0);
             }
         }
+
+        [Fact]
+        public void TestCollectionInitializer()
+        {
+            var buffer = new ArrayBuffer<int>(10);
+            var span = new ArrayBuffer<int>.Span(buffer, 5)
+            {
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            };
+
+            for (int i = 0; i < span.Length; i++)
+            {
+                span[i].Should().Be(i);
+            }
+        }
     }
 }

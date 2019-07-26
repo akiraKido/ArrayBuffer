@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using BinaryDictionaryNS;
 
@@ -7,25 +8,43 @@ namespace ArrayBufferNS
 {
     public class ArrayBuffer<T>
     {
-        public struct Span : IDisposable
+        public struct Span : IDisposable, IEnumerable<T>
         {
             public readonly int Length;
 
             private readonly int start;
             private readonly ArrayBuffer<T> parent;
 
-            public Span(ArrayBuffer<T> parent, int start, int length)
-            {
-                this.start = start;
-                Length = length;
+            private int last;
 
+            public Span(ArrayBuffer<T> parent, int size)
+            {
+                start = parent.GetStartPosAndReserve(size);
+                Length = size;
+                
                 this.parent = parent;
+                last = 0;
             }
 
             public T this[int i]
             {
                 get => parent.array[start + i];
-                set => parent.array[start + i] = value;
+                set
+                {
+                    last = -1;
+                    parent.array[start + i] = value;
+                }
+            }
+
+            public void Add(T item)
+            {
+                if (last == -1)
+                {
+                    throw new NotSupportedException("Add is only used for collection initialization");
+                }
+
+                parent.array[start + last] = item;
+                last += 1;
             }
 
             public void Return()
@@ -41,6 +60,16 @@ namespace ArrayBufferNS
             {
                 Return();
             }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                throw new NotSupportedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotSupportedException();
+            }
         }
 
         public IReadOnlyList<T> Array => array;
@@ -55,12 +84,14 @@ namespace ArrayBufferNS
             array = new T[size];
         }
 
-        public Span Take(int size)
+        public Span Take(int size) => new Span(this, size);
+
+        private int GetStartPosAndReserve(int size)
         {
             CheckArraySize(size);
 
             int start = -1;
-
+            
             while (true)
             {
                 for (int i = start + 1; i < array.Length; i++)
@@ -97,8 +128,9 @@ namespace ArrayBufferNS
                 usedIndexes.Add(i);
             }
 
-            return new Span(this, start, size);
+            return start;
         }
+        
 
         private void CheckArraySize(int size)
         {
