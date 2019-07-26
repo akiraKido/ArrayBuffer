@@ -145,5 +145,24 @@ namespace ArrayBufferNS.Tests
                 span[i].Should().Be(i);
             }
         }
+
+        [Fact]
+        public void TestSpanEnumerator()
+        {
+            var buffer = new ArrayBuffer<int>(10);
+            var span = buffer.Take(10);
+            for (int i = 0; i < 10; i++)
+            {
+                span[i] = i;
+            }
+
+            var cnt = 0;
+            foreach (var i in span)
+            {
+                i.Should().Be(cnt);
+                cnt += 1;
+            }
+
+        }
     }
 }

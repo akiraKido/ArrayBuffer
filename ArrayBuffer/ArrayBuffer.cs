@@ -61,14 +61,42 @@ namespace ArrayBufferNS
                 Return();
             }
 
-            public IEnumerator<T> GetEnumerator()
-            {
-                throw new NotSupportedException();
-            }
+            public IEnumerator<T> GetEnumerator() => new SpanEnumerator(this);
 
-            IEnumerator IEnumerable.GetEnumerator()
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            private class SpanEnumerator : IEnumerator<T>
             {
-                throw new NotSupportedException();
+                private readonly Span span;
+                private int index = -1;
+                
+                public SpanEnumerator(Span span)
+                {
+                    this.span = span;
+                }
+
+
+                public bool MoveNext()
+                {
+                    if (index + 1 >= span.Length)
+                    {
+                        return false;
+                    }
+                    
+                    index += 1;
+                    return true;
+                }
+
+                public void Reset()
+                {
+                    index = -1;
+                }
+
+                public T Current => span[index];
+
+                object IEnumerator.Current => Current;
+
+                public void Dispose() => Reset();
             }
         }
 
