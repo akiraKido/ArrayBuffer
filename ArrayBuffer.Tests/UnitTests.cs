@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Xunit;
 using FluentAssertions;
+using static FluentAssertions.FluentActions;
 
 // ReSharper disable once CheckNamespace
 namespace ArrayBufferNS.Tests
@@ -47,7 +49,7 @@ namespace ArrayBufferNS.Tests
 
             for (int i = 0; i < span.Length; i++)
             {
-                buffer.Array[i].Should().Be(i);
+                buffer.Array[i + 10].Should().Be(i);
             }
         }
 
@@ -105,8 +107,8 @@ namespace ArrayBufferNS.Tests
             var span2 = buffer.Take(10);
             var span3 = buffer.Take(10);
 
-            buffer.Array.Count.Should().Be(40);
-            
+            buffer.Array.Count.Should().Be(30);
+
             for (int i = 0; i < span2.Length; i++)
             {
                 span2[i] = i;
@@ -175,10 +177,12 @@ namespace ArrayBufferNS.Tests
             {
                 list.AddRange(span);
             }
+
             using (var span = new ArrayBuffer<string>.Span(buffer, 3) {"ddd", "eee", "fff"})
             {
                 list.AddRange(span);
             }
+
             using (var span = new ArrayBuffer<string>.Span(buffer, 3) {"ggg", "hhh", "iii"})
             {
                 list.AddRange(span);
@@ -206,6 +210,7 @@ namespace ArrayBufferNS.Tests
             {
                 span[i] = 1;
             }
+
             span.Return();
             
             span.Returned.Should().Be(true);
@@ -214,6 +219,179 @@ namespace ArrayBufferNS.Tests
 
             span[0] = 10;
             span[0].Should().Be(0);
+        }
+
+        [Fact]
+        public void TestArrayExtension()
+        {
+            var array = new[] {0, 1, 2, 3};
+
+            array = ArrayBuffer<int>.ExtendArray(array, 3);
+            array.Length.Should().Be(7);
+            array[0].Should().Be(0);
+            array[1].Should().Be(1);
+            array[2].Should().Be(2);
+            array[3].Should().Be(3);
+            for (int i = 4; i < array.Length; i++)
+            {
+                array[i].Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public void TestMapExtension()
+        {
+            var map = new[]
+            {
+                new Map(10, 0),
+                new Map(10, 0),
+            };
+
+            map = ArrayBuffer<int>.ExtendMap(map, 10);
+
+            map.Length.Should().Be(2);
+            map[0].Position.Should().Be(10);
+            map[0].Size.Should().Be(10);
+            map[1].Position.Should().Be(20);
+            map[1].Size.Should().Be(0);
+        }
+        [Fact]
+        public void TestMapExtensionWithLargerNumber()
+        {
+            var map = new[]
+            {
+                new Map(0, 10),
+                new Map(10, 0),
+            };
+
+            map = ArrayBuffer<int>.ExtendMap(map, 20);
+
+            map.Length.Should().Be(3);
+            map[0].Position.Should().Be(0);
+            map[0].Size.Should().Be(10);
+            map[1].Position.Should().Be(10);
+            map[1].Size.Should().Be(20);
+            map[2].Position.Should().Be(30);
+            map[2].Size.Should().Be(0);
+        }
+
+        [Fact]
+        public void TestSquashMap()
+        {
+            var map = new[]
+            {
+                new Map(0, 0),
+                new Map(10, 0),
+            };
+
+            map = ArrayBuffer<int>.SquashMap(map, 0);
+            map.Length.Should().Be(2);
+            map[0].Position.Should().Be(10);
+            map[0].Size.Should().Be(0);
+            map[1].Position.Should().Be(10);
+            map[1].Size.Should().Be(0);
+        }
+
+        [Fact]
+        public void TestSquashMapLarge()
+        {
+            var map = new[]
+            {
+                new Map(0, 0),
+                new Map(10, 10),
+                new Map(20, 10),
+                new Map(30, 10),
+                new Map(40, 10),
+                new Map(50, 0),
+            };
+
+            map = ArrayBuffer<int>.SquashMap(map, 0);
+            for (int i = 0; i < 4; i++)
+            {
+                map[i].Position.Should().Be((i + 1) * 10);
+                map[i].Size.Should().Be(10);
+            }
+
+            map[4].Position.Should().Be(50);
+            map[4].Size.Should().Be(0);
+            map[5].Position.Should().Be(50);
+            map[5].Size.Should().Be(0);
+        }
+
+        [Fact]
+        public void TestFindOpenLocation()
+        {
+            var maps = new[]
+            {
+                new Map(0, 10),
+                new Map(10, 0),
+            };
+
+            var (map, i) = ArrayBuffer<int>.FindOpenLocation(maps, 10);
+            i.Should().Be(0);
+            map.Position.Should().Be(0);
+            map.Size.Should().Be(10);
+
+            maps = new[]
+            {
+                new Map(0, 10),
+                new Map(10, 10),
+                new Map(20, 20),
+                new Map(40, 10),
+                new Map(50, 0),
+            };
+            
+            (map, i) = ArrayBuffer<int>.FindOpenLocation(maps, 20);
+            i.Should().Be(2);
+            map.Position.Should().Be(20);
+            map.Size.Should().Be(20);
+
+            maps = new[]
+            {
+                new Map(10, 10),
+            };
+
+            Invoking(() => ArrayBuffer<int>.FindOpenLocation(maps, 20)).Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void TestAllocate()
+        {
+            var buffer = new ArrayBuffer<int>();
+            buffer.Allocate(10);
+            buffer.Map[0].Position.Should().Be(10);
+            buffer.Map[0].Size.Should().Be(0);
+
+            buffer.Allocate(10);
+            buffer.Map[0].Position.Should().Be(20);
+            buffer.Map[0].Size.Should().Be(0);
+
+            buffer.Array.Count.Should().Be(20);
+        }
+
+        [Fact]
+        public void TestFindFreeLocation()
+        {
+            var maps = new[]
+            {
+                new Map(0, 10),
+                new Map(10, 10),
+                new Map(20, 0),
+            };
+            var freeLoc = ArrayBuffer<int>.FindFreeLocation(maps, 0);
+            freeLoc.Should().Be(1);
+        }
+
+        [Fact]
+        public void TestFree()
+        {
+            var buffer = new ArrayBuffer<int>();
+            int a = buffer.Allocate(10);
+            int b = buffer.Allocate(20);
+            int c = buffer.Allocate(10);
+            buffer.Free(20, b);
+            buffer.Free(10, a);
+            buffer.Free(10, c);
         }
     }
 }
