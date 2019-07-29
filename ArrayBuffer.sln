@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayBuffer.Tests", "ArrayB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryDictionary", "BinaryDictionary\BinaryDictionary\BinaryDictionary.csproj", "{D16278B8-6060-480C-AC0A-D14F66759F7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayBuffer.Bench", "ArrayBuffer.Bench\ArrayBuffer.Bench.csproj", "{D5582C83-854D-46E6-B901-C59A6255A53C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D16278B8-6060-480C-AC0A-D14F66759F7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5582C83-854D-46E6-B901-C59A6255A53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5582C83-854D-46E6-B901-C59A6255A53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5582C83-854D-46E6-B901-C59A6255A53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5582C83-854D-46E6-B901-C59A6255A53C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
