@@ -130,3 +130,14 @@ using(var span = buffer.Take(10))
 
 **Do not use the `Add` method!**
 The `Add` method is only there for using Collection Initializers. You will get an exception if you try to use `Add`.
+
+# Benchmark
+
+Seems like using pure arrays might be better. meh.
+
+|                              Method |      Mean |     Error |    StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|------------------------------------ |----------:|----------:|----------:|-------:|------:|------:|----------:|
+|                    NormalListAndAdd |  83.12 ns |  1.614 ns |  1.585 ns | 0.1913 |     - |     - |     184 B |
+|                        ListAndArray | 232.13 ns |  3.011 ns |  2.669 ns | 0.3245 |     - |     - |     312 B |
+|                  ListAndArrayBuffer | 604.80 ns |  9.204 ns |  8.159 ns | 0.6399 |     - |     - |     616 B |
+| ListAndArrayBufferWithLocalFunction | 653.07 ns | 14.461 ns | 13.527 ns | 0.6399 |     - |     - |     616 B |
