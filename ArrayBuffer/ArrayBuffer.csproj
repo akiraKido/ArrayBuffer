@@ -3,9 +3,5 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\BinaryDictionary\BinaryDictionary\BinaryDictionary.csproj" />
-    </ItemGroup>
     
 </Project>
