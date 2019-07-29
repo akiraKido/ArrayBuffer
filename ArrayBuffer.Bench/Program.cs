@@ -116,5 +116,32 @@ namespace ArrayBuffer.Bench
             });
             return list;
         }
+
+        [Benchmark]
+        public List<string> CollectionAdder()
+        {
+            var container = new CollectionAdder<string>.BufferContainer(3);
+            var list = new List<string>();
+
+            list.AddRange(new CollectionAdder<string>(container)
+            {
+                "aaa",
+                "bbb",
+                "ccc",
+            });
+            list.AddRange(new CollectionAdder<string>(container)
+            {
+                "ddd",
+                "eee",
+                "fff",
+            });
+            list.AddRange(new CollectionAdder<string>(container)
+            {
+                "ggg",
+            });
+           
+            return list;
+            
+        }
     }
 }
